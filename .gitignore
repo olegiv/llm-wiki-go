@@ -1,0 +1,46 @@
+# Go build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+coverage.html
+
+# Go workspace file
+go.work
+go.work.sum
+
+# Dependency directories
+vendor/
+
+# Build output
+bin/
+dist/
+build/
+
+# Environment files
+.env
+.env.*
+
+# IDE / editor noise
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Local Claude Code settings (never commit personal overrides)
+.claude/settings.local.json
+
+# Local audit output
+.audit/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+/tmp/
