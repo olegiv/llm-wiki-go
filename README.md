@@ -51,6 +51,7 @@ llm-wiki-go/
 │   └── log.md            # append-only record of substantive wiki changes
 ├── AGENTS.md             # agent guidelines
 ├── CLAUDE.md             # Claude Code guidelines (imports AGENTS.md)
+├── Makefile              # convenience wrapper around go + wikilint
 ├── README.md
 └── go.mod
 ```
@@ -61,21 +62,26 @@ external modules are required.
 
 ## Commands
 
-Build everything:
+All common tasks go through the Makefile. Run `make help` to list the
+available targets:
+
+```bash
+make help          # list every target with a one-line description
+make build         # compile bin/wikilint
+make test          # run the Go test suite
+make lint          # run wikilint against ./wiki
+make check         # full pre-commit chain: fmt-check + vet + test + lint
+make fmt           # format all Go files in-place
+make clean         # remove build artifacts (bin/)
+make install       # install wikilint into $(GOBIN) or $(GOPATH)/bin
+```
+
+Under the hood these invoke the standard Go toolchain. If you prefer,
+you can drive it directly:
 
 ```bash
 go build ./...
-```
-
-Run the test suite:
-
-```bash
 go test ./...
-```
-
-Run the wiki linter (this is the "did I break the wiki?" check):
-
-```bash
 go run ./cmd/wikilint -wiki ./wiki
 ```
 

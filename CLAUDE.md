@@ -69,26 +69,26 @@ Every wiki change updates two bookkeeping pages:
 2. **`wiki/log.md`** — append a dated entry describing what changed and
    why. Most recent entries at the top.
 
-## Run `wikilint` before finishing
+## Run `wikilint` before finishing a wiki edit
 
 Before you consider a wiki change done, run:
 
 ```bash
-go run ./cmd/wikilint -wiki ./wiki
+make lint
 ```
 
-It must print exactly `wikilint: OK`. If it reports any issue, fix the
-wiki content — not the linter — and re-run until it is clean.
+(equivalent to `go run ./cmd/wikilint -wiki ./wiki`). It must print
+exactly `wikilint: OK`. If it reports any issue, fix the wiki content —
+not the linter — and re-run until it is clean.
 
-## Before finishing a code change
+## Before finishing any code change
 
-In addition to `wikilint` (for wiki edits), run the full verification
-chain for Go changes:
+Run the full verification chain:
 
 ```bash
-gofmt -l .
-go build ./...
-go test ./...
+make check
 ```
 
-All four commands must succeed before you hand work back to the user.
+That runs `gofmt -l .`, `go vet ./...`, `go test ./...`, and `wikilint`
+in that order. All four steps must succeed before you hand work back to
+the user. Run `make help` to list every target.

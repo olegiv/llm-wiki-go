@@ -90,13 +90,16 @@ consistent. The `wikilint` Go CLI enforces the structural invariants.
 
 ## Before you finish
 
-Run, in order, and fix anything that fails:
+Run the full verification chain and fix anything that fails:
 
 ```bash
-gofmt -l .                                  # expect no output
-go build ./...
-go test ./...
-go run ./cmd/wikilint -wiki ./wiki          # expect exactly "wikilint: OK"
+make check
 ```
 
-If any of those fail, fix the root cause. Do not bypass them.
+`make check` runs, in order, `gofmt -l .`, `go vet ./...`,
+`go test ./...`, and `go run ./cmd/wikilint -wiki ./wiki`. The linter
+step must print exactly `wikilint: OK`. If any step fails, fix the root
+cause — do not bypass or skip them.
+
+Run `make help` to see every available target, including `make fmt`,
+`make lint`, and `make build`.
