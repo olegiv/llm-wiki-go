@@ -31,4 +31,4 @@ The first tagged release will promote `[Unreleased]` to
   `dependency-review.yml`.
 - Dependabot config for `gomod`, `github-actions`, and `gitsubmodule`.
 - `LICENSE` (GPL-3.0), `SECURITY.md`, `CONTRIBUTING.md`, and Go /
-  CodeQL / Dependency-review badges in `README.md`.
+  CodeQL badges in `README.md`.

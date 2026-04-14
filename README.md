@@ -1,6 +1,6 @@
 # llm-wiki-go
 
-[![Go](https://github.com/olegiv/llm-wiki-go/actions/workflows/go.yml/badge.svg)](https://github.com/olegiv/llm-wiki-go/actions/workflows/go.yml) [![CodeQL](https://github.com/olegiv/llm-wiki-go/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/olegiv/llm-wiki-go/actions/workflows/github-code-scanning/codeql) [![Dependency review](https://github.com/olegiv/llm-wiki-go/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/olegiv/llm-wiki-go/actions/workflows/dependency-review.yml)
+[![Go](https://github.com/olegiv/llm-wiki-go/actions/workflows/go.yml/badge.svg)](https://github.com/olegiv/llm-wiki-go/actions/workflows/go.yml) [![CodeQL](https://github.com/olegiv/llm-wiki-go/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/olegiv/llm-wiki-go/actions/workflows/github-code-scanning/codeql)
 
 A [Karpathy-style][karpathy-llm-wiki] "LLM Wiki" — a repo designed around
 the idea that the interesting knowledge artifact is a living, compiled
