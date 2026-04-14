@@ -1,8 +1,12 @@
 # llm-wiki-go
 
-A Karpathy-style "LLM Wiki" — a repo designed around the idea that the
-interesting knowledge artifact is a living, compiled wiki, not the raw
-source material it was distilled from.
+[![Go](https://github.com/olegiv/llm-wiki-go/actions/workflows/go.yml/badge.svg)](https://github.com/olegiv/llm-wiki-go/actions/workflows/go.yml) [![CodeQL](https://github.com/olegiv/llm-wiki-go/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/olegiv/llm-wiki-go/actions/workflows/github-code-scanning/codeql)
+
+A [Karpathy-style][karpathy-llm-wiki] "LLM Wiki" — a repo designed around
+the idea that the interesting knowledge artifact is a living, compiled
+wiki, not the raw source material it was distilled from.
+
+[karpathy-llm-wiki]: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f
 
 The repo has two data layers and a small amount of Go tooling that keeps
 them honest:
@@ -150,3 +154,10 @@ make setup
 
 to populate `.claude/shared/` and create the local `raw/` and `wiki/`
 directories.
+
+## License
+
+llm-wiki-go is released under the GNU General Public License v3.0.
+See [`LICENSE`](LICENSE) for the full text.
+
+Copyright (C) 2026 Oleg Ivanchenko
