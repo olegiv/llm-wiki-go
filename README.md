@@ -150,3 +150,10 @@ make setup
 
 to populate `.claude/shared/` and create the local `raw/` and `wiki/`
 directories.
+
+## License
+
+llm-wiki-go is released under the GNU General Public License v3.0.
+See [`LICENSE`](LICENSE) for the full text.
+
+Copyright (C) 2026 Oleg Ivanchenko
