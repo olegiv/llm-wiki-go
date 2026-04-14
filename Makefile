@@ -11,7 +11,7 @@ WIKI_DIR := ./wiki
 
 .DEFAULT_GOAL := help
 
-.PHONY: help build test fmt fmt-check vet lint check tidy clean install
+.PHONY: help build test fmt fmt-check vet lint check tidy clean install setup
 
 help: ## Show this help
 	@awk 'BEGIN {FS = ":.*?## "; printf "Usage: make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?## / { printf "  \033[36m%-11s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
@@ -50,3 +50,9 @@ clean: ## Remove build artifacts
 
 install: ## Install wikilint into $(GOBIN) or $(GOPATH)/bin
 	$(GO) install ./cmd/wikilint
+
+setup: ## Create raw/ and wiki/ directory structure
+	@mkdir -p raw wiki/entities wiki/topics wiki/sources
+	@test -f wiki/index.md || printf '# Wiki Index\n\n## Entities\n\n## Topics\n\n## Log\n\n- [Change Log](log.md)\n' > wiki/index.md
+	@test -f wiki/log.md  || printf '# Change Log\n' > wiki/log.md
+	@echo "Directory structure ready."

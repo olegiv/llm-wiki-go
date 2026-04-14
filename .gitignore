@@ -44,3 +44,7 @@ Thumbs.db
 # Temporary files
 *.tmp
 /tmp/
+
+# Source material and compiled wiki (local-only, may be symlinks)
+/raw
+/wiki

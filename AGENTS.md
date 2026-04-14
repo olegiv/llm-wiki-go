@@ -19,12 +19,16 @@ Claude Code and other agents act as the compiler/editor: they read from
 `raw/`, compile knowledge into `wiki/`, and keep the wiki internally
 consistent. The `wikilint` Go CLI enforces the structural invariants.
 
+Both `raw/` and `wiki/` are gitignored and may be real directories or
+symlinks to an external location. Run `make setup` after a fresh clone
+to create the directory structure and seed wiki files.
+
 ## Canonical directories
 
 | Path               | Purpose                                             |
 |--------------------|-----------------------------------------------------|
-| `raw/`             | Immutable source material. **Read-only for agents**. |
-| `wiki/`            | Canonical compiled knowledge (Markdown).            |
+| `raw/`             | Immutable source material. **Read-only for agents**. Gitignored. |
+| `wiki/`            | Canonical compiled knowledge (Markdown). Gitignored. |
 | `wiki/entities/`   | Pages about discrete things (people, products, …). |
 | `wiki/topics/`     | Pages that aggregate related entities and sources. |
 | `wiki/sources/`    | One page per ingested item from `raw/`.            |

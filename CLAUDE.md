@@ -12,14 +12,17 @@ consistent.
 
 ## Canonical directories
 
-- `raw/` — immutable source material. **Read-only.**
-- `wiki/` — canonical compiled knowledge in Markdown.
+- `raw/` — immutable source material. **Read-only.** Gitignored.
+- `wiki/` — canonical compiled knowledge in Markdown. Gitignored.
 - `wiki/entities/` — pages about discrete things.
 - `wiki/topics/` — pages aggregating related entities and sources.
 - `wiki/sources/` — one page per ingested item from `raw/`.
 - `cmd/wikilint/` + `internal/wikilint/` — the linter.
 - `internal/wiki/` — helpers for ingest / answer / reconcile workflows.
 - `.claude/` — skills, agents, and the shared submodule.
+
+Both `raw/` and `wiki/` are gitignored and may be real directories or
+symlinks. Run `make setup` after a fresh clone to create them.
 
 ## The `raw/` rule
 

@@ -60,6 +60,29 @@ No `go.sum` file ships with the scaffold: the project currently depends
 only on the Go standard library, and Go does not emit a `go.sum` until
 external modules are required.
 
+## Getting started
+
+`raw/` and `wiki/` are **gitignored** — they hold local content and may
+be real directories or symlinks to an external location. After cloning,
+run:
+
+```bash
+make setup
+```
+
+This creates the directory structure (`raw/`, `wiki/entities/`,
+`wiki/topics/`, `wiki/sources/`) and seeds `wiki/index.md` and
+`wiki/log.md` if they don't already exist. It is safe to re-run.
+
+If you already have the data elsewhere, symlink instead:
+
+```bash
+ln -s /path/to/your/raw  raw
+ln -s /path/to/your/wiki wiki
+```
+
+Either way, git will show no changes.
+
 ## Commands
 
 All common tasks go through the Makefile. Run `make help` to list the
@@ -67,6 +90,7 @@ available targets:
 
 ```bash
 make help          # list every target with a one-line description
+make setup         # create raw/ and wiki/ directory structure
 make build         # compile bin/wikilint
 make test          # run the Go test suite
 make lint          # run wikilint against ./wiki
@@ -121,6 +145,8 @@ that is reused across multiple projects. After cloning the repo, run:
 
 ```bash
 git submodule update --init --recursive
+make setup
 ```
 
-to populate `.claude/shared/`.
+to populate `.claude/shared/` and create the local `raw/` and `wiki/`
+directories.
