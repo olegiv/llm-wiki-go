@@ -1,0 +1,1 @@
+../shared/stacks/go/commands/code-quality.md

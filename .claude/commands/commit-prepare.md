@@ -1,0 +1,1 @@
+../shared/stacks/go/commands/commit-prepare.md
