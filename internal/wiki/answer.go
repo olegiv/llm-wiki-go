@@ -1,6 +1,7 @@
 package wiki
 
 import (
+	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -12,8 +13,12 @@ import (
 // Markdown pages whose content contains every supplied term (case-insensitive).
 // Results are sorted for determinism. An empty terms slice returns all pages.
 func SearchWiki(wikiDir string, terms []string) ([]string, error) {
+	resolved, err := filepath.EvalSymlinks(wikiDir)
+	if err != nil {
+		return nil, fmt.Errorf("resolve wiki dir: %w", err)
+	}
 	var matches []string
-	err := filepath.WalkDir(wikiDir, func(path string, d fs.DirEntry, err error) error {
+	err = filepath.WalkDir(resolved, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -22,6 +27,13 @@ func SearchWiki(wikiDir string, terms []string) ([]string, error) {
 		}
 		if !strings.EqualFold(filepath.Ext(d.Name()), ".md") {
 			return nil
+		}
+		info, serr := d.Info()
+		if serr != nil {
+			return serr
+		}
+		if info.Size() > maxFileBytes {
+			return fmt.Errorf("%s: file too large (%d bytes, max %d)", path, info.Size(), maxFileBytes)
 		}
 		data, rerr := os.ReadFile(path)
 		if rerr != nil {
@@ -33,7 +45,7 @@ func SearchWiki(wikiDir string, terms []string) ([]string, error) {
 				return nil
 			}
 		}
-		rel, rerr := filepath.Rel(wikiDir, path)
+		rel, rerr := filepath.Rel(resolved, path)
 		if rerr != nil {
 			return rerr
 		}

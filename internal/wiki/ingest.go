@@ -5,6 +5,7 @@
 package wiki
 
 import (
+	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -12,12 +13,19 @@ import (
 	"strings"
 )
 
+// maxFileBytes is the largest file the wiki helpers will read.
+const maxFileBytes = 10 << 20
+
 // ListRawFiles walks rawDir read-only and returns the slash-separated
 // relative paths of regular files in sorted order. It never modifies the
 // raw directory.
 func ListRawFiles(rawDir string) ([]string, error) {
+	resolved, err := filepath.EvalSymlinks(rawDir)
+	if err != nil {
+		return nil, fmt.Errorf("resolve raw dir: %w", err)
+	}
 	var paths []string
-	err := filepath.WalkDir(rawDir, func(path string, d fs.DirEntry, err error) error {
+	err = filepath.WalkDir(resolved, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -27,7 +35,7 @@ func ListRawFiles(rawDir string) ([]string, error) {
 		if d.Name() == ".gitkeep" {
 			return nil
 		}
-		rel, rerr := filepath.Rel(rawDir, path)
+		rel, rerr := filepath.Rel(resolved, path)
 		if rerr != nil {
 			return rerr
 		}
@@ -43,6 +51,13 @@ func ListRawFiles(rawDir string) ([]string, error) {
 
 // ReadRawFile returns the contents of a raw source file. It is read-only.
 func ReadRawFile(path string) ([]byte, error) {
+	info, err := os.Stat(path)
+	if err != nil {
+		return nil, err
+	}
+	if info.Size() > maxFileBytes {
+		return nil, fmt.Errorf("%s: file too large (%d bytes, max %d)", path, info.Size(), maxFileBytes)
+	}
 	return os.ReadFile(path)
 }
 

@@ -9,6 +9,9 @@ import (
 	"strings"
 )
 
+// maxPageBytes is the largest Markdown file loadPages will read.
+const maxPageBytes = 10 << 20
+
 // Issue is a single problem found by Lint.
 type Issue struct {
 	Path    string
@@ -122,6 +125,13 @@ func loadPages(wikiDir string) (map[string]*Page, error) {
 		}
 		if !strings.EqualFold(filepath.Ext(d.Name()), ".md") {
 			return nil
+		}
+		info, serr := d.Info()
+		if serr != nil {
+			return serr
+		}
+		if info.Size() > maxPageBytes {
+			return fmt.Errorf("%s: file too large (%d bytes, max %d)", path, info.Size(), maxPageBytes)
 		}
 		data, rerr := os.ReadFile(path)
 		if rerr != nil {

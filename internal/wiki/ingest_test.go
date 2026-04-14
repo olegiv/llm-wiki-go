@@ -42,6 +42,42 @@ func TestListRawFiles_MissingDir(t *testing.T) {
 	}
 }
 
+func TestListRawFiles_Symlink(t *testing.T) {
+	real := t.TempDir()
+	if err := os.WriteFile(filepath.Join(real, "note.txt"), []byte("content"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	link := filepath.Join(t.TempDir(), "linked")
+	if err := os.Symlink(real, link); err != nil {
+		t.Fatal(err)
+	}
+	got, err := ListRawFiles(link)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []string{"note.txt"}
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %v, want %v", got, want)
+	}
+}
+
+func TestReadRawFile_TooLarge(t *testing.T) {
+	big := filepath.Join(t.TempDir(), "huge.bin")
+	if err := os.WriteFile(big, []byte("x"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Truncate(big, 11<<20); err != nil {
+		t.Fatal(err)
+	}
+	_, err := ReadRawFile(big)
+	if err == nil {
+		t.Fatal("expected error for oversized file")
+	}
+	if !strings.Contains(err.Error(), "file too large") {
+		t.Errorf("unexpected error: %v", err)
+	}
+}
+
 func TestSourcePageTemplate(t *testing.T) {
 	got := SourcePageTemplate("Example Source", "raw/example.txt")
 	musts := []string{

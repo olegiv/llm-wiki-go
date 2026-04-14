@@ -4,8 +4,50 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 	"testing"
 )
+
+func TestSearchWiki_Symlink(t *testing.T) {
+	real := t.TempDir()
+	sub := filepath.Join(real, "entities")
+	if err := os.MkdirAll(sub, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(sub, "fox.md"), []byte("# Fox\n\nquick brown fox\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	link := filepath.Join(t.TempDir(), "linked")
+	if err := os.Symlink(real, link); err != nil {
+		t.Fatal(err)
+	}
+	got, err := SearchWiki(link, []string{"fox"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []string{"entities/fox.md"}
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %v, want %v", got, want)
+	}
+}
+
+func TestSearchWiki_TooLarge(t *testing.T) {
+	dir := t.TempDir()
+	big := filepath.Join(dir, "huge.md")
+	if err := os.WriteFile(big, []byte("x"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Truncate(big, 11<<20); err != nil {
+		t.Fatal(err)
+	}
+	_, err := SearchWiki(dir, nil)
+	if err == nil {
+		t.Fatal("expected error for oversized file")
+	}
+	if !strings.Contains(err.Error(), "file too large") {
+		t.Errorf("unexpected error: %v", err)
+	}
+}
 
 func TestSearchWiki(t *testing.T) {
 	dir := t.TempDir()

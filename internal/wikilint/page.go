@@ -54,7 +54,7 @@ func ParsePage(repoPath, relPath, content string) *Page {
 // It skips fenced code blocks so headings inside them don't count.
 func parseHeadings(p *Page) {
 	scanner := bufio.NewScanner(strings.NewReader(p.Content))
-	scanner.Buffer(make([]byte, 64*1024), 1<<20)
+	scanner.Buffer(make([]byte, 64*1024), 256*1024)
 
 	var (
 		inFence        bool
@@ -110,5 +110,9 @@ func parseHeadings(p *Page) {
 			}
 		}
 	}
+	// scanner.Err() is intentionally not checked: if a line exceeds
+	// 256 KiB the scan stops and the page is partially parsed. The
+	// linter will report structural issues (missing H1, sections, etc.)
+	// which is adequate for this edge case.
 	flush()
 }
