@@ -30,5 +30,5 @@ The first tagged release will promote `[Unreleased]` to
 - CI workflows: `go.yml` (build, vet, test, wikilint) and
   `dependency-review.yml`.
 - Dependabot config for `gomod`, `github-actions`, and `gitsubmodule`.
-- `LICENSE` (GPL-3.0), `SECURITY.md`, `CONTRIBUTING.md`, and CI/license
-  badges in `README.md`.
+- `LICENSE` (GPL-3.0), `SECURITY.md`, `CONTRIBUTING.md`, and Go /
+  CodeQL / Dependency-review badges in `README.md`.
