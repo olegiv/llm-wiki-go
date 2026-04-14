@@ -90,9 +90,11 @@ func Lint(wikiDir string) (*Report, error) {
 			if rel == entry {
 				continue
 			}
-			if !reachable[rel] {
-				report.Add(pages[rel].RepoPath, "orphan page not reachable from index.md")
+			page := pages[rel]
+			if reachable[rel] {
+				continue
 			}
+			report.Add(page.RepoPath, "orphan page not reachable from index.md")
 		}
 	} else {
 		report.Add(filepath.ToSlash(filepath.Join(wikiDir, entry)), "missing wiki entry point index.md")
