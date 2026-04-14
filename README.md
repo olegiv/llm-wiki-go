@@ -1,5 +1,8 @@
 # llm-wiki-go
 
+[![Go CI](https://github.com/olegiv/llm-wiki-go/actions/workflows/go.yml/badge.svg)](https://github.com/olegiv/llm-wiki-go/actions/workflows/go.yml)
+[![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](LICENSE)
+
 A [Karpathy-style][karpathy-llm-wiki] "LLM Wiki" — a repo designed around
 the idea that the interesting knowledge artifact is a living, compiled
 wiki, not the raw source material it was distilled from.
