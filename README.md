@@ -1,8 +1,10 @@
 # llm-wiki-go
 
-A Karpathy-style "LLM Wiki" — a repo designed around the idea that the
-interesting knowledge artifact is a living, compiled wiki, not the raw
-source material it was distilled from.
+A [Karpathy-style][karpathy-llm-wiki] "LLM Wiki" — a repo designed around
+the idea that the interesting knowledge artifact is a living, compiled
+wiki, not the raw source material it was distilled from.
+
+[karpathy-llm-wiki]: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f
 
 The repo has two data layers and a small amount of Go tooling that keeps
 them honest:
