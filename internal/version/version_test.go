@@ -1,6 +1,8 @@
 package version
 
 import (
+	"fmt"
+	"runtime"
 	"runtime/debug"
 	"testing"
 )
@@ -16,7 +18,7 @@ func TestFormat(t *testing.T) {
 			name: "no build info",
 			info: nil,
 			ok:   false,
-			want: "wikilint dev (go1.26.0, linux/amd64)",
+			want: fmt.Sprintf("wikilint dev (%s, linux/amd64)", runtime.Version()),
 		},
 		{
 			name: "build info without vcs",
