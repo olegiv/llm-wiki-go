@@ -12,8 +12,8 @@ consistent.
 
 ## Canonical directories
 
-- `raw/` — immutable source material. **Read-only.** Gitignored.
-- `wiki/` — canonical compiled knowledge in Markdown. Gitignored.
+- `raw/` — immutable source material. **Read-only.** Tracked in git.
+- `wiki/` — canonical compiled knowledge in Markdown. Tracked in git.
 - `wiki/entities/` — pages about discrete things.
 - `wiki/topics/` — pages aggregating related entities and sources.
 - `wiki/sources/` — one page per ingested item from `raw/`.
@@ -21,8 +21,12 @@ consistent.
 - `internal/wiki/` — helpers for ingest / answer / reconcile workflows.
 - `.claude/` — skills, agents, and the shared submodule.
 
-Both `raw/` and `wiki/` are gitignored and may be real directories or
-symlinks. Run `make setup` after a fresh clone to create them.
+`raw/` ships as a directory of symlinks into a sibling source checkout
+(the default example is `../ocms-go.core`). `wiki/` ships as the
+compiled Markdown. Both are tracked in git — no `make setup` needed for
+the default `ocms-go.core` example, provided `ocms-go.core` is cloned as
+a sibling of this repo. `make setup` remains available for bootstrapping
+against a different source repo.
 
 ## The `raw/` rule
 

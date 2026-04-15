@@ -1,0 +1,1 @@
+../../../../ocms-go.core/docs/video-embedding.md

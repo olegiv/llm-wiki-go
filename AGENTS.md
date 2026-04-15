@@ -19,16 +19,18 @@ Claude Code and other agents act as the compiler/editor: they read from
 `raw/`, compile knowledge into `wiki/`, and keep the wiki internally
 consistent. The `wikilint` Go CLI enforces the structural invariants.
 
-Both `raw/` and `wiki/` are gitignored and may be real directories or
-symlinks to an external location. Run `make setup` after a fresh clone
-to create the directory structure and seed wiki files.
+`raw/` and `wiki/` are tracked in git with an `ocms-go.core` sibling-
+clone example already compiled. `raw/ocms-go.core/` is a directory of
+relative symlinks into `../ocms-go.core/`; `wiki/` is the compiled
+Markdown. `make setup` stays available for anyone bootstrapping against
+a different source.
 
 ## Canonical directories
 
 | Path               | Purpose                                             |
 |--------------------|-----------------------------------------------------|
-| `raw/`             | Immutable source material. **Read-only for agents**. Gitignored. |
-| `wiki/`            | Canonical compiled knowledge (Markdown). Gitignored. |
+| `raw/`             | Immutable source material. **Read-only for agents**. Tracked; symlinks into `../ocms-go.core`. |
+| `wiki/`            | Canonical compiled knowledge (Markdown). Tracked; compiled output. |
 | `wiki/entities/`   | Pages about discrete things (people, products, …). |
 | `wiki/topics/`     | Pages that aggregate related entities and sources. |
 | `wiki/sources/`    | One page per ingested item from `raw/`.            |

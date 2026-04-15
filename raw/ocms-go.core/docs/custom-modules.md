@@ -1,0 +1,1 @@
+../../../../ocms-go.core/docs/custom-modules.md

@@ -1,0 +1,1 @@
+../../../../ocms-go.core/docs/admin-bulk-actions.md

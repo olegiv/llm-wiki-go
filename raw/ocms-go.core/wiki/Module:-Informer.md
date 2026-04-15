@@ -1,0 +1,1 @@
+../../../../ocms-go.core/wiki/Module:-Informer.md
