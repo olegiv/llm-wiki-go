@@ -13,9 +13,11 @@ cd llm-wiki-go
 make setup
 ```
 
-`make setup` creates the gitignored `raw/` and `wiki/` directories and
-seeds `wiki/index.md` and `wiki/log.md`. If you keep your content
-elsewhere, symlink `raw/` and `wiki/` instead.
+`raw/` and `wiki/` are tracked in git and ship with the repo. For the
+default `ocms-go.core` example, just clone `ocms-go.core` as a sibling.
+`make setup` is available for bootstrapping against a different source
+repo — it creates the directory structure and seeds `wiki/index.md` and
+`wiki/log.md`.
 
 ## Development loop
 
