@@ -35,8 +35,10 @@ In scope:
 
 Out of scope:
 
-- Content under `raw/` and `wiki/` — these are gitignored local data and
-  never ship with the repository.
+- Content-level issues in `raw/` or `wiki/` — `raw/` is immutable source
+  material and `wiki/` is compiled output. Both ship with the repo, but
+  content disagreements or factual errors are not security
+  vulnerabilities.
 - Upstream dependencies (Go toolchain, standard library, third-party
   submodules). Report those to their respective maintainers.
 - Social-engineering or physical-access attacks on individual maintainers.

@@ -66,26 +66,24 @@ external modules are required.
 
 ## Getting started
 
-`raw/` and `wiki/` are **gitignored** — they hold local content and may
-be real directories or symlinks to an external location. After cloning,
-run:
+`raw/` and `wiki/` are **tracked in git** and ship with the repo. The
+default example uses `raw/ocms-go.core/`, a directory of symlinks into a
+sibling `../ocms-go.core` checkout. `wiki/` ships as the compiled
+Markdown.
+
+For the default example, clone `ocms-go.core` as a sibling of this repo
+and you're ready to go — no `make setup` needed:
 
 ```bash
-make setup
+cd ..
+git clone https://github.com/olegiv/ocms-go.core.git
+cd llm-wiki-go
 ```
 
-This creates the directory structure (`raw/`, `wiki/entities/`,
-`wiki/topics/`, `wiki/sources/`) and seeds `wiki/index.md` and
-`wiki/log.md` if they don't already exist. It is safe to re-run.
-
-If you already have the data elsewhere, symlink instead:
-
-```bash
-ln -s /path/to/your/raw  raw
-ln -s /path/to/your/wiki wiki
-```
-
-Either way, git will show no changes.
+`make setup` remains available for bootstrapping against a different
+source repo. It creates the directory structure (`raw/`,
+`wiki/entities/`, `wiki/topics/`, `wiki/sources/`) and seeds
+`wiki/index.md` and `wiki/log.md` if they don't already exist.
 
 ## Commands
 
@@ -149,11 +147,10 @@ that is reused across multiple projects. After cloning the repo, run:
 
 ```bash
 git submodule update --init --recursive
-make setup
 ```
 
-to populate `.claude/shared/` and create the local `raw/` and `wiki/`
-directories.
+to populate `.claude/shared/`. (`raw/` and `wiki/` are already tracked
+in git and do not need to be created.)
 
 ## License
 
