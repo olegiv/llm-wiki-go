@@ -85,6 +85,11 @@ source repo. It creates the directory structure (`raw/`,
 `wiki/entities/`, `wiki/topics/`, `wiki/sources/`) and seeds
 `wiki/index.md` and `wiki/log.md` if they don't already exist.
 
+Using `llm-wiki-go` for a project other than the bundled
+`ocms-go.core` example — or running wikis for several projects in
+parallel — is documented in
+[`docs/MULTI_PROJECT.md`](docs/MULTI_PROJECT.md).
+
 ## Commands
 
 All common tasks go through the Makefile. Run `make help` to list the
