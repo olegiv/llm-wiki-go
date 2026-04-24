@@ -51,9 +51,10 @@ make setup
 # repo" phrasing in the README might suggest.
 ln -s ../../logwatch-ai-go raw/logwatch-ai-go
 
-# Sanity-check: the symlink resolves and the linter passes on the
-# seeded empty wiki.
-ls -la raw/logwatch-ai-go
+# Sanity-check: the symlink resolves (the trailing slash forces ls to
+# dereference it, so a broken target fails here instead of later during
+# ingest) and the linter passes on the seeded empty wiki.
+ls -la raw/logwatch-ai-go/
 make lint   # expect: wikilint: OK
 ```
 
