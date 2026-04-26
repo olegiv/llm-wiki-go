@@ -96,15 +96,30 @@ All common tasks go through the Makefile. Run `make help` to list the
 available targets:
 
 ```bash
-make help          # list every target with a one-line description
-make setup         # create raw/ and wiki/ directory structure
-make build         # compile bin/wikilint
-make test          # run the Go test suite
-make lint          # run wikilint against ./wiki
-make check         # full pre-commit chain: fmt-check + vet + test + lint
-make fmt           # format all Go files in-place
-make clean         # remove build artifacts (bin/)
-make install       # install wikilint into $(GOBIN) or $(GOPATH)/bin
+make help                 # list every target with a one-line description
+make all                  # build the default local/dev binary
+make setup                # create raw/ and wiki/ directory structure
+make build                # fast local/dev build to bin/wikilint
+make build-prod           # optimized host production build
+make build-linux-amd64    # optimized static linux/amd64 production build
+make build-darwin-arm64   # optimized darwin/arm64 production build
+make build-all-platforms  # linux/amd64 + darwin/arm64 production builds
+make test                 # run the Go test suite
+make test-race            # run tests with race detector
+make coverage             # run tests with coverage summary
+make coverage-html        # write coverage.out + coverage.html
+make lint-go              # run golangci-lint
+make lint-wiki            # run wikilint against ./wiki
+make lint                 # run all linters
+make check                # full pre-commit chain: fmt-check + vet + test + lint
+make fmt                  # format all Go files in-place
+make fmt-check            # fail if gofumpt would reformat files
+make vet                  # run go vet
+make deps                 # go mod download
+make tidy                 # go mod tidy
+make install-tools        # install pinned developer tools
+make clean                # remove build artifacts (bin/)
+make install              # install wikilint into $(GOBIN) or $(GOPATH)/bin
 ```
 
 Under the hood these invoke the standard Go toolchain. If you prefer,

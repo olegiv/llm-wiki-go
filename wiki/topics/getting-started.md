@@ -60,8 +60,13 @@ Rotate immediately after first login. Production startup is blocked on default a
 See [sources/readme.md](../sources/readme.md) and [sources/wiki-getting-started.md](../sources/wiki-getting-started.md) for the full list. Key targets:
 
 - `make dev` / `make run` / `make stop` / `make restart`.
-- `make build` / `make build-prod` / `make build-linux-amd64` / `make build-darwin-arm64`.
+- `make build` fast local/dev build.
+- `make build-prod` optimized host production build.
+- `make build-linux-amd64` optimized static Linux AMD64 production build.
+- `make build-darwin-arm64` optimized Darwin ARM64 production build.
+- `make build-all-platforms` Linux AMD64 + Darwin ARM64 production builds.
 - `make test` — requires `OCMS_SESSION_SECRET`.
+- `make check` full local quality gate.
 - `make migrate-up` / `-down` / `-status` / `-create`.
 - `make sqlc` / `make templ` / `make assets`.
 

@@ -81,7 +81,7 @@ Every wiki change updates two bookkeeping pages:
 Before you consider a wiki change done, run:
 
 ```bash
-make lint
+make lint-wiki
 ```
 
 (equivalent to `go run ./cmd/wikilint -wiki ./wiki`). It must print
@@ -96,6 +96,7 @@ Run the full verification chain:
 make check
 ```
 
-That runs `gofmt -l .`, `go vet ./...`, `go test ./...`, and `wikilint`
-in that order. All four steps must succeed before you hand work back to
-the user. Run `make help` to list every target.
+That runs `gofumpt -l .`, `go vet ./...`, `golangci-lint run ./...`,
+`wikilint`, and `go test ./...`. All steps must succeed before you hand
+work back to the user. Run `make help` to list every target, including
+`make build-prod`, `make build-linux-amd64`, and `make build-darwin-arm64`.

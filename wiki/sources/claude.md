@@ -4,7 +4,7 @@
 
 Claude Code workflow and architecture guide for oCMS contributors. Documents:
 
-- **Build / dev commands.** `make dev` (assets + server), `make run` (server only), `make build`, `make test` with required `OCMS_SESSION_SECRET`, database migrations via goose, code generation via `sqlc generate` / `templ generate`.
+- **Build / dev commands.** `make dev` (assets + server), `make run` (server only), `make build` (fast local/dev), `make build-prod` (optimized host production), `make build-linux-amd64` (optimized static Linux AMD64 production), `make build-darwin-arm64`, `make build-all-platforms`, `make test` with required `OCMS_SESSION_SECRET`, `make check`, database migrations via goose, code generation via `sqlc generate` / `templ generate`.
 - **Go toolchain rules.** Local Go must match `go.mod`; never downgrade; never set `GOTOOLCHAIN=local` as a workaround.
 - **Pre-commit hook protocol.** `.git/hooks/pre-commit` blocks non-interactive commits; user-initiated commits use `--no-verify`.
 - **Request flow.** HTTP → chi router → middleware chain → handler → store (sqlc) → SQLite.

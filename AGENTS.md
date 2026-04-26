@@ -102,10 +102,12 @@ Run the full verification chain and fix anything that fails:
 make check
 ```
 
-`make check` runs, in order, `gofmt -l .`, `go vet ./...`,
-`go test ./...`, and `go run ./cmd/wikilint -wiki ./wiki`. The linter
-step must print exactly `wikilint: OK`. If any step fails, fix the root
-cause — do not bypass or skip them.
+`make check` runs `gofumpt -l .`, `go vet ./...`,
+`golangci-lint run ./...`, `go run ./cmd/wikilint -wiki ./wiki`,
+and `go test ./...`. The wiki linter step must print exactly
+`wikilint: OK`. If any step fails, fix the root cause — do not bypass
+or skip them.
 
 Run `make help` to see every available target, including `make fmt`,
-`make lint`, and `make build`.
+`make lint`, `make build-prod`, `make build-linux-amd64`, and
+`make build-darwin-arm64`.

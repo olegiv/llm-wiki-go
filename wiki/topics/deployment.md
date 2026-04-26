@@ -23,9 +23,9 @@ make build-darwin-arm64
 make build-all-platforms
 ```
 
-The binary **embeds the core themes** (`default`, `developer`) and all static assets — no additional files are needed unless custom themes live under `custom/themes/`.
+The Linux target builds an optimized static Linux AMD64 production binary. The Darwin target builds an optimized Darwin ARM64 production binary. The binary **embeds the core themes** (`default`, `developer`) and all static assets — no additional files are needed unless custom themes live under `custom/themes/`.
 
-Production strip-and-trim via `make build-prod`.
+Use `make build` for fast local/dev builds and `make build-prod` for optimized host production builds.
 
 ## Docker
 

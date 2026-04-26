@@ -28,9 +28,10 @@ repo — it creates the directory structure and seeds `wiki/index.md` and
    make check
    ```
 
-   This runs, in order, `gofmt -l .`, `go vet ./...`, `go test ./...`,
-   and `wikilint`. All four must succeed and the linter must print
-   exactly `wikilint: OK`.
+   This runs `gofumpt -l .`, `go vet ./...`,
+   `golangci-lint run ./...`, `wikilint`, and `go test ./...`.
+   All steps must succeed and the wiki linter must print exactly
+   `wikilint: OK`.
 3. Commit and push.
 
 Use `make help` to see every available target.
