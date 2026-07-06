@@ -87,7 +87,7 @@ func extractLinks(content string) ([]Link, []Wikilink) {
 // for targets that escape the wiki root or resolve to empty.
 func resolveMarkdownLink(fromRelPath, target string) (string, bool) {
 	target = stripAnchor(strings.TrimSpace(target))
-	if target == "" {
+	if target == "" || path.IsAbs(target) {
 		return "", false
 	}
 	dir := path.Dir(fromRelPath)

@@ -6,6 +6,7 @@ package wiki
 
 import (
 	"fmt"
+	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -50,15 +51,52 @@ func ListRawFiles(rawDir string) ([]string, error) {
 }
 
 // ReadRawFile returns the contents of a raw source file. It is read-only.
+// Symlinks are followed because raw/ ships as symlinks into a sibling
+// source checkout; the resolved target must be a regular file within the
+// size limit.
 func ReadRawFile(path string) ([]byte, error) {
-	info, err := os.Stat(path)
+	resolved, err := filepath.EvalSymlinks(path)
 	if err != nil {
 		return nil, err
 	}
-	if info.Size() > maxFileBytes {
-		return nil, fmt.Errorf("%s: file too large (%d bytes, max %d)", path, info.Size(), maxFileBytes)
+	data, ok, err := readRegularFileLimited(resolved, maxFileBytes)
+	if err != nil {
+		return nil, err
 	}
-	return os.ReadFile(path)
+	if !ok {
+		return nil, fmt.Errorf("%s: not a regular file", path)
+	}
+	return data, nil
+}
+
+// readRegularFileLimited reads path only if it is a regular file of at most
+// maxBytes. Symlinks and other irregular files report ok=false: a symlink's
+// stat size describes the link, not its target, so it cannot be size-checked
+// safely. The capped read keeps a file that grows after the check bounded.
+func readRegularFileLimited(path string, maxBytes int64) ([]byte, bool, error) {
+	info, err := os.Lstat(path)
+	if err != nil {
+		return nil, false, err
+	}
+	if !info.Mode().IsRegular() {
+		return nil, false, nil
+	}
+	if info.Size() > maxBytes {
+		return nil, false, fmt.Errorf("%s: file too large (%d bytes, max %d)", path, info.Size(), maxBytes)
+	}
+	f, err := os.Open(path) // #nosec G304 -- reading caller-supplied paths is the helper's purpose; target is Lstat-checked and the read is capped
+	if err != nil {
+		return nil, false, err
+	}
+	defer func() { _ = f.Close() }() // read-only open; nothing to do on close failure
+	data, err := io.ReadAll(io.LimitReader(f, maxBytes+1))
+	if err != nil {
+		return nil, false, err
+	}
+	if int64(len(data)) > maxBytes {
+		return nil, false, fmt.Errorf("%s: file too large (over %d bytes)", path, maxBytes)
+	}
+	return data, true, nil
 }
 
 // SourcePageTemplate produces a bootstrap wiki page body for an ingested

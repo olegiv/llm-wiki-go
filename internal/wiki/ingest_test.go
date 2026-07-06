@@ -78,6 +78,55 @@ func TestReadRawFile_TooLarge(t *testing.T) {
 	}
 }
 
+func TestReadRawFile_FollowsSymlink(t *testing.T) {
+	target := filepath.Join(t.TempDir(), "note.txt")
+	if err := os.WriteFile(target, []byte("content"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	link := filepath.Join(t.TempDir(), "linked.txt")
+	if err := os.Symlink(target, link); err != nil {
+		t.Fatal(err)
+	}
+	got, err := ReadRawFile(link)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(got) != "content" {
+		t.Errorf("got %q, want %q", got, "content")
+	}
+}
+
+func TestReadRawFile_SymlinkTooLarge(t *testing.T) {
+	target := filepath.Join(t.TempDir(), "huge.bin")
+	if err := os.WriteFile(target, []byte("x"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Truncate(target, 11<<20); err != nil {
+		t.Fatal(err)
+	}
+	link := filepath.Join(t.TempDir(), "linked.bin")
+	if err := os.Symlink(target, link); err != nil {
+		t.Fatal(err)
+	}
+	_, err := ReadRawFile(link)
+	if err == nil {
+		t.Fatal("expected error for oversized symlink target")
+	}
+	if !strings.Contains(err.Error(), "file too large") {
+		t.Errorf("unexpected error: %v", err)
+	}
+}
+
+func TestReadRawFile_NotRegular(t *testing.T) {
+	_, err := ReadRawFile(t.TempDir())
+	if err == nil {
+		t.Fatal("expected error for directory")
+	}
+	if !strings.Contains(err.Error(), "not a regular file") {
+		t.Errorf("unexpected error: %v", err)
+	}
+}
+
 func TestSourcePageTemplate(t *testing.T) {
 	got := SourcePageTemplate("Example Source", "raw/example.txt")
 	musts := []string{

@@ -49,6 +49,33 @@ func TestSearchWiki_TooLarge(t *testing.T) {
 	}
 }
 
+func TestSearchWiki_SkipsSymlinkedMarkdownFile(t *testing.T) {
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "fox.md"), []byte("# Fox\n\nquick brown fox\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	// The target matches the term and exceeds maxFileBytes; a symlink's
+	// DirEntry size must not let it slip past the size guard.
+	outside := filepath.Join(t.TempDir(), "outside.md")
+	if err := os.WriteFile(outside, []byte("quick brown fox\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Truncate(outside, 11<<20); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(outside, filepath.Join(dir, "linked.md")); err != nil {
+		t.Fatal(err)
+	}
+	got, err := SearchWiki(dir, []string{"fox"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []string{"fox.md"}
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %v, want %v", got, want)
+	}
+}
+
 func TestSearchWiki(t *testing.T) {
 	dir := t.TempDir()
 	files := map[string]string{

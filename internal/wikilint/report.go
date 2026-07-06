@@ -2,6 +2,7 @@ package wikilint
 
 import (
 	"fmt"
+	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -109,6 +110,7 @@ func Lint(wikiDir string) (*Report, error) {
 
 // loadPages walks wikiDir and parses all .md files into Page values keyed by
 // their wiki-root-relative slash-separated path (e.g. "entities/foo.md").
+// Symlinked files inside the tree are skipped.
 func loadPages(wikiDir string) (map[string]*Page, error) {
 	// Resolve symlinks so WalkDir descends into the real directory.
 	resolved, err := filepath.EvalSymlinks(wikiDir)
@@ -126,16 +128,12 @@ func loadPages(wikiDir string) (map[string]*Page, error) {
 		if !strings.EqualFold(filepath.Ext(d.Name()), ".md") {
 			return nil
 		}
-		info, serr := d.Info()
-		if serr != nil {
-			return serr
-		}
-		if info.Size() > maxPageBytes {
-			return fmt.Errorf("%s: file too large (%d bytes, max %d)", path, info.Size(), maxPageBytes)
-		}
-		data, rerr := os.ReadFile(path)
+		data, ok, rerr := readRegularFileLimited(path, maxPageBytes)
 		if rerr != nil {
 			return rerr
+		}
+		if !ok {
+			return nil
 		}
 		rel, rerr := filepath.Rel(resolved, path)
 		if rerr != nil {
@@ -150,6 +148,36 @@ func loadPages(wikiDir string) (map[string]*Page, error) {
 		return nil, err
 	}
 	return pages, nil
+}
+
+// readRegularFileLimited reads path only if it is a regular file of at most
+// maxBytes. Symlinks and other irregular files report ok=false: a symlink's
+// stat size describes the link, not its target, so it cannot be size-checked
+// safely. The capped read keeps a file that grows after the check bounded.
+func readRegularFileLimited(path string, maxBytes int64) ([]byte, bool, error) {
+	info, err := os.Lstat(path)
+	if err != nil {
+		return nil, false, err
+	}
+	if !info.Mode().IsRegular() {
+		return nil, false, nil
+	}
+	if info.Size() > maxBytes {
+		return nil, false, fmt.Errorf("%s: file too large (%d bytes, max %d)", path, info.Size(), maxBytes)
+	}
+	f, err := os.Open(path) // #nosec G304 -- linting caller-supplied paths is the tool's purpose; target is Lstat-checked and the read is capped
+	if err != nil {
+		return nil, false, err
+	}
+	defer func() { _ = f.Close() }() // read-only open; nothing to do on close failure
+	data, err := io.ReadAll(io.LimitReader(f, maxBytes+1))
+	if err != nil {
+		return nil, false, err
+	}
+	if int64(len(data)) > maxBytes {
+		return nil, false, fmt.Errorf("%s: file too large (over %d bytes)", path, maxBytes)
+	}
+	return data, true, nil
 }
 
 func sortedPageKeys(pages map[string]*Page) []string {
