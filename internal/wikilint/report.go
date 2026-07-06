@@ -165,7 +165,7 @@ func readRegularFileLimited(path string, maxBytes int64) ([]byte, bool, error) {
 	if info.Size() > maxBytes {
 		return nil, false, fmt.Errorf("%s: file too large (%d bytes, max %d)", path, info.Size(), maxBytes)
 	}
-	f, err := os.Open(path)
+	f, err := os.Open(path) // #nosec G304 -- linting caller-supplied paths is the tool's purpose; target is Lstat-checked and the read is capped
 	if err != nil {
 		return nil, false, err
 	}

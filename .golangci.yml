@@ -8,10 +8,19 @@ linters:
   default: none
   enable:
     - errcheck
+    - gosec
     - govet
     - ineffassign
     - staticcheck
     - unused
+  exclusions:
+    rules:
+      # Test fixtures in t.TempDir() use the project-standard 0o644/0o755
+      # permissions; gosec's 0600/0750 guidance targets production writes.
+      - path: _test\.go
+        linters:
+          - gosec
+        text: "G30[16]"
 
 issues:
   max-issues-per-linter: 0
