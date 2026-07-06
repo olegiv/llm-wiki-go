@@ -83,6 +83,8 @@ func TestResolveMarkdownLink(t *testing.T) {
 		{"strip anchor", "entities/foo.md", "bar.md#section", "entities/bar.md", true},
 		{"escape above root", "foo.md", "../outside.md", "", false},
 		{"empty target", "foo.md", "", "", false},
+		{"absolute target from root", "index.md", "/etc/passwd.md", "", false},
+		{"absolute target from subdir", "entities/foo.md", "/evil.md", "", false},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
