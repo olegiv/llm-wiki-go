@@ -110,13 +110,8 @@ func Lint(wikiDir string) (*Report, error) {
 // loadPages walks wikiDir and parses all .md files into Page values keyed by
 // their wiki-root-relative slash-separated path (e.g. "entities/foo.md").
 func loadPages(wikiDir string) (map[string]*Page, error) {
-	// Resolve symlinks so WalkDir descends into the real directory.
-	resolved, err := filepath.EvalSymlinks(wikiDir)
-	if err != nil {
-		return nil, fmt.Errorf("resolve wiki dir: %w", err)
-	}
 	pages := map[string]*Page{}
-	err = filepath.WalkDir(resolved, func(path string, d fs.DirEntry, err error) error {
+	err := filepath.WalkDir(wikiDir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -137,7 +132,7 @@ func loadPages(wikiDir string) (map[string]*Page, error) {
 		if rerr != nil {
 			return rerr
 		}
-		rel, rerr := filepath.Rel(resolved, path)
+		rel, rerr := filepath.Rel(wikiDir, path)
 		if rerr != nil {
 			return rerr
 		}
