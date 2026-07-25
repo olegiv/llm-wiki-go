@@ -2,6 +2,7 @@ package wikilint
 
 import (
 	"fmt"
+	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -126,16 +127,12 @@ func loadPages(wikiDir string) (map[string]*Page, error) {
 		if !strings.EqualFold(filepath.Ext(d.Name()), ".md") {
 			return nil
 		}
-		info, serr := d.Info()
-		if serr != nil {
-			return serr
-		}
-		if info.Size() > maxPageBytes {
-			return fmt.Errorf("%s: file too large (%d bytes, max %d)", path, info.Size(), maxPageBytes)
-		}
-		data, rerr := os.ReadFile(path)
+		data, ok, rerr := readRegularFileLimited(path, maxPageBytes)
 		if rerr != nil {
 			return rerr
+		}
+		if !ok {
+			return nil
 		}
 		rel, rerr := filepath.Rel(resolved, path)
 		if rerr != nil {
@@ -150,6 +147,38 @@ func loadPages(wikiDir string) (map[string]*Page, error) {
 		return nil, err
 	}
 	return pages, nil
+}
+
+func readRegularFileLimited(path string, maxBytes int64) ([]byte, bool, error) {
+	info, err := os.Lstat(path)
+	if err != nil {
+		return nil, false, err
+	}
+	if info.Mode()&os.ModeSymlink != 0 {
+		return nil, false, nil
+	}
+	if !info.Mode().IsRegular() {
+		return nil, false, nil
+	}
+	if info.Size() > maxBytes {
+		return nil, false, fmt.Errorf("%s: file too large (%d bytes, max %d)", path, info.Size(), maxBytes)
+	}
+
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, false, err
+	}
+	defer f.Close()
+
+	limited := io.LimitReader(f, maxBytes+1)
+	data, err := io.ReadAll(limited)
+	if err != nil {
+		return nil, false, err
+	}
+	if int64(len(data)) > maxBytes {
+		return nil, false, fmt.Errorf("%s: file too large (over %d bytes)", path, maxBytes)
+	}
+	return data, true, nil
 }
 
 func sortedPageKeys(pages map[string]*Page) []string {

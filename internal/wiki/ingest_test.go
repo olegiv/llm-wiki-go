@@ -78,6 +78,24 @@ func TestReadRawFile_TooLarge(t *testing.T) {
 	}
 }
 
+func TestReadRawFile_Symlink(t *testing.T) {
+	target := filepath.Join(t.TempDir(), "target.txt")
+	if err := os.WriteFile(target, []byte("hello"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	link := filepath.Join(t.TempDir(), "linked.txt")
+	if err := os.Symlink(target, link); err != nil {
+		t.Fatal(err)
+	}
+	_, err := ReadRawFile(link)
+	if err == nil {
+		t.Fatal("expected error for symlink")
+	}
+	if !strings.Contains(err.Error(), "symlink") {
+		t.Errorf("unexpected error: %v", err)
+	}
+}
+
 func TestSourcePageTemplate(t *testing.T) {
 	got := SourcePageTemplate("Example Source", "raw/example.txt")
 	musts := []string{
