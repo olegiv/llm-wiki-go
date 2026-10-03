@@ -3,7 +3,6 @@ package wiki
 import (
 	"fmt"
 	"io/fs"
-	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -28,16 +27,12 @@ func SearchWiki(wikiDir string, terms []string) ([]string, error) {
 		if !strings.EqualFold(filepath.Ext(d.Name()), ".md") {
 			return nil
 		}
-		info, serr := d.Info()
-		if serr != nil {
-			return serr
-		}
-		if info.Size() > maxFileBytes {
-			return fmt.Errorf("%s: file too large (%d bytes, max %d)", path, info.Size(), maxFileBytes)
-		}
-		data, rerr := os.ReadFile(path)
+		data, ok, rerr := readRegularFileLimited(path, maxFileBytes)
 		if rerr != nil {
 			return rerr
+		}
+		if !ok {
+			return nil
 		}
 		lower := strings.ToLower(string(data))
 		for _, term := range terms {
